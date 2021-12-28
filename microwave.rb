@@ -4,35 +4,39 @@ class Microwave
         @time = time
     end
     def timer
-        l = @time.to_s.length
+        arr = @time.to_s.chars
+        l = arr.length
+        p = Proc.new{|x| arr[x]+arr[x+1]}
+    #    puts p.call(0)
         if l <= 2     
               key = @time.to_i
             if key <= 9
-                return "'00:0#{@time}'"
+                return "00:0#{@time}"
             elsif  key > 9 && key < 60
-                return "'00:#{@time}'"
-            elsif  key == 60
-                return "'01:00'"
+                return "00:#{@time}"
+            elsif  key < 70
+                return "01:0#{(@time.to_i-60).to_s}"
             else
-                return "'01:#{@time.to_i-60}'"
+                return "01:#{@time.to_i-60}"
             end
         else  
             case  l
             when 4
-                if @time[2,3].to_i > 60
-                    return "'#{@time[0].to_i+1}:#{@time[1,2].to_i-60}'"
+                puts p.call(2).to_i
+                if p.call(2).to_i > 60
+                    return "#{p.call(0).to_i+1}:#{p.call(2).to_i-60}"
                 else
-                    return "'#{@time[0,1]}:#{@time[2,3]}}'"
+                    return "#{p.call(0)}:#{p.call(2)}"
                 end
-            else 
-                if @time[1,2].to_i > 60
-                    if @time[0].to_i+1 < 10
-                        return "'0#{@time[0].to_i+1}:#{@time[1,2].to_i-60}'"
+            when 3 
+                if p.call(1).to_i > 60
+                    if arr[0].to_i < 9
+                        return "0#{arr[0].to_i+1}:#{p.call(1).to_i-60}"
                     else
-                        return "'#{@time[0].to_i+1}:#{@time[1,2].to_i-60}'"
+                        return "#{arr[0].to_i+1}:#{p.call(1).to_i-60}"
                     end
                 else
-                    return "'0#{@time[0]}:#{@time[1,2]}}'"
+                    return "0#{arr[0]}:#{p.call(1)}"
                 end  
             end
         end
@@ -40,4 +44,4 @@ class Microwave
     end
    
 end
-puts Microwave.new(1).timer 
+puts Microwave.new(60).timer 
