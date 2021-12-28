@@ -9,15 +9,23 @@ class Meetup
     year = @year
     month = @month
     if CON.include?(teenth)
+          key = CON.index(teenth)+1
+          k=1;
            day = d.downcase+'?'
            start_day = Date.new(year.to_i, month.to_i)
            end_day =  Date.civil(year.to_i, month.to_i, -1)
-            a = (start_day..end_day).select {|i| i.send(day)}
-            puts a
+            (start_day..end_day).select do |i| 
+              if i.send(day)
+                if k == key
+                  puts i
+                end
+                k +=1
+              end
+            end
     end
   end
 end
 m = Meetup.new(12,2021)
-m.day("monday", "first" )
+m.day("monday", "second" )
 
 
