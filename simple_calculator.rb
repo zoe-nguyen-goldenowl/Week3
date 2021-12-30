@@ -1,34 +1,28 @@
-class SimpleCalculator< StandardError
-    ALLOWED_OPERATIONS = ['+', '/', '*'].freeze
-  def self.calculate(first_operand, second_operand, operation)
-        if ALLOWED_OPERATIONS.include? operation
-            begin
-                if operation == "+"
-                    p "#{first_operand} + #{second_operand} = #{first_operand + second_operand}"
-                elsif operation == "/"
-                    begin
-                        p "#{first_operand} / #{second_operand} = #{first_operand/second_operand}"
-                    rescue ZeroDivisionError => e
-                        p "Division by zero is not allowed."
-                    end
-                elsif operation == "*"
-                        p "#{first_operand} * #{second_operand} = #{first_operand*second_operand}"
-                end
-            rescue TypeError => e
-                p  e
-            end
 
-        else 
-            begin
-                ALLOWED_OPERATIONS.include operation == true     
-            rescue => exception
-                p "Raises an UnsupportedOperation"
-            end
+class SimpleCalculator
+    class UnsupportedOperation  < StandardError; end
+    ALLOWED_OPERATIONS = ['+', '/', '*'].freeze
+    def self.calculate(first_operand, second_operand, operation)
+        if !ALLOWED_OPERATIONS.include? operation
+            raise SimpleCalculator::UnsupportedOperation
+        elsif !first_operand.is_a?(Numeric) || !second_operand.is_a?(Numeric)
+            raise  ArgumentError
         end
-        
+         
+        if operation == "+"
+            p "#{first_operand} + #{second_operand} = #{first_operand + second_operand}"
+        elsif operation == "/"
+            begin
+                p "#{first_operand} / #{second_operand} = #{first_operand/second_operand}"
+            rescue ZeroDivisionError => e
+                p "Division by zero is not allowed."
+            end
+        elsif operation == "*"
+                p "#{first_operand} * #{second_operand} = #{first_operand*second_operand}"
+        end
     end
 end
-SimpleCalculator.calculate('22', 25, '+')
+SimpleCalculator.calculate(1, '2', '+')
 =begin
 In this exercise you will be building error handling for a simple calculator.
 The goal is to have a working calculator that returns a string with the following pattern: 16 + 51 = 67, 
@@ -51,4 +45,4 @@ when provided with arguments 16, 51 and +.
     Update the SimpleCalculator.calculate() to handle ZeroDivisionError exceptions. The handling code should return 
     the string with the content Division by zero is not allowed.. Any other exception should not be handled by the 
     SimpleCalculator.calculate() method.
-
+=end
